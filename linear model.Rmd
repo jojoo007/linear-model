@@ -1,0 +1,138 @@
+---
+title: "linear model"
+author: "JOHANNA INIGUEZ"
+date: "December 4, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(tigerstats)
+```
+
+```{r}
+avast=read.csv("avast.csv")
+attach(avast)
+```
+ 
+##Introduction 
+
+This data was taken from tigerstat. The data set contains observation from job applicants  on their SIM score are strenght, grip and rating. We write these models as : 
+
+1.SIMS = f(ARMS)       
+2.SIMS = f(GRIP)       
+3.SIMS = f(GRIP,ARM)      
+
+
+
+## first model  
+
+
+```{r}
+model1=lm(SIMS~ARM)
+summary.lm(model1)
+```
+
+The summary states the SIMS equation and shows that if and when put in the scatterplot, it creates a straight line through the points on a the plot.    
+
+
+
+
+
+```{r}
+plot(ARM,SIMS)
+abline(model1)
+```
+
+The scatterplot shows that the SIMS = -.409 + 0.05 = ARMS. This equation is a straight line thoouigh the points on the  scatterplot. 
+
+
+
+The prediction interval from model when ARMS= 88 ,GRIP 94 is :  
+
+```{r}
+newdata= data.frame (ARM=88, GRIP=94)
+predict(model1,newdata,interval = "predict")
+```
+
+
+The first prediction value is ( fit) and the other two value are the lower and upper prediction values. 
+
+
+
+
+
+##second model
+
+```{r}
+model2=lm(SIMS~GRIP)
+summary.lm(model2)
+
+```
+
+The summary states the SIMS equation and shows that if and when put in the scatterplot, it creates a straight line through the points on a the plot.  
+
+
+
+```{r}
+plot(GRIP,SIMS)
+abline(model1)
+```
+
+
+The scatterplot shows that the SIMS = -.409 + 0.05 = GRIP. This equation is a straight line thoouigh the points on the  scatterplot.   
+
+
+
+The prediction interval from model when SIMS= 95 ,GRIP 94 is :    
+
+
+```{r}
+newdata= data.frame (SIMS=95, GRIP=94)
+predict(model2,newdata,interval = "predict")
+```
+
+
+The first prediction value is ( fit) and the other two value are the lower and upper prediction values.   
+
+
+
+
+## third model 
+
+
+```{r}
+model3=lm(SIMS~ARM+GRIP)
+summary.lm(model3)
+```
+
+The summary states the SIMS equation and shows that if and when put in the scatterplot, it creates a straight line through the points on a the plot.    
+
+
+
+```{r}
+plot(SIMS~ARM+GRIP)
+abline(model3)
+```
+
+
+
+The scatterplot shows that the SIMS = -.409 + 0.05 = ARM + GRIP. This equation is a straight line thoouigh the points on the  scatterplot.   
+
+
+The prediction interval from model when SIMS= 95 ,GRIP 94 is ARM = 88 :       
+
+
+```{r}
+newdata= data.frame (SIMS=95, GRIP=94, ARM=88)
+predict(model3,newdata,interval = "predict")
+```
+
+The first prediction value is ( fit) and the other two value are the lower and upper prediction values.  
+
+```{r}
+anova(model1,model3)
+```
+
+The P- value is 0.000004994 < 0.05 so we reject the null hypthesis and conclude that there is a difference between the two models. Model three is grreater since it has a smaller RSS than model 1. The null hypothesis is that there is no diffrence between model 1 and model 3. The alternative hyposthesis is that there is a differnce between the models.   
